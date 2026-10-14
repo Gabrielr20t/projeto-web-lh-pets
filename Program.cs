@@ -1,0 +1,27 @@
+namespace Projeto_Web_Lh_Pets_versão_1;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        var app = builder.Build();
+
+        // Rota "/" - versão inicial do projeto
+        app.MapGet("/", () => "LH Pets - Protótipo 1");
+
+        // Libera os arquivos da pasta wwwroot e cria a rota "/index"
+        app.UseStaticFiles();
+        app.MapGet("/index", (HttpContext contexto) => {
+            contexto.Response.Redirect("index.html", false);
+        });
+
+        // Rota "/listaClientes" - lista de clientes vinda do banco de dados
+        Banco dba = new Banco();
+        app.MapGet("/listaClientes", (HttpContext contexto) => {
+            contexto.Response.WriteAsync(dba.GetListaString());
+        });
+
+        app.Run();
+    }
+}
